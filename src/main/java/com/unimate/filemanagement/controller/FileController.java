@@ -5,6 +5,7 @@ import com.unimate.filemanagement.model.UserFile;
 import com.unimate.filemanagement.service.StorageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,6 +38,19 @@ public class FileController {
         }
     }
     
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteFile(@RequestParam("userId") String userId,
+                                        @RequestParam("fileId") String fileId) {
+        try {
+            storageService.deleteFile(userId, fileId);
+            return ResponseEntity.ok("File deleted successfully.");
+        } catch (FileStorageException e) {
+            log.error("Error deleting file", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body("Failed to delete file: " + e.getMessage());
+        }
+    }
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<UserFile>> getUserFiles(@PathVariable String userId) {
         log.info("Fetching files for user: {}", userId);

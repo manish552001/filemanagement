@@ -1,22 +1,23 @@
 package com.unimate.filemanagement.model;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
-@Document(collection = "user_files")
+@Entity
+@Table(name = "user_files")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserFile {
     @Id
-    private String id; // MongoDB typically uses a String ID (ObjectId)
-
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private Long id;
+    
     private String userId;
     private String fileName;
     private String fileType;
